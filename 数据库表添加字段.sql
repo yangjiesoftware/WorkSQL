@@ -1,0 +1,3 @@
+alter table T_MBR_POINT_CONVERT add (TRANS_STATUS VARCHAR2(8))
+
+comment on column T_MBR_POINT_CONVERT.TRANS_STATUS is '交易状态'
