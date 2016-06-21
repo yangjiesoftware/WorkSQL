@@ -1,0 +1,22 @@
+select p.mobile_no "电话",p.name_cn "中文名",m.mbr_id, m.crm_cust_id,m.default_mbrship_cd "默认会籍" from t_mbr_person p,t_mbr m where p.person_id=m.person_id and m.attribute=1 and  m.crm_cust_id
+in
+('1-1L6-4079', 
+'1-1BC0AZ',   
+'1-1TYMGK',   
+'1-5XE-59',   
+'1-14AZRV',   
+'1-2T9CJU',   
+'1-5W5-3482', 
+'1-2E9PS7',   
+'1-2EH8TH',   
+'1-11F0CX',   
+'1-4NEHA6',   
+'1-3YC-1735', 
+'1-2CKSSF',   
+'1-658-3343', 
+'1-66J-478',  
+'1-1Q6ZB4',   
+'1-2EOQPV',   
+'1-4GHE1N',   
+'1-7PD-714',  
+'1-29OK7U')   
