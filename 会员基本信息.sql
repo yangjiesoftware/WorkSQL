@@ -1,23 +1,57 @@
-SELECT * from T_MBR_POINT_ACCOUNT WHERE MBR_ID ='857642'
---会员基本信息
-select * from t_mbr_register r where r.login_name='18576773226' for update;--18323185303   18576773226--lcy  1-1CR4-224
-select * from t_mbr m where m.mbr_id='59108443' for update;--Active  660014823681
-select * from t_mbr m where m.person_id='12531683'   -- 1-1CR9-370   1-1CR4-224
-select * from t_mbr_person p where p.person_id='12531683';
-select * from t_mbr_register r where r.mbr_id='193535';
-select * from t_mbr_mbrship m where m.mbr_id='59108443';
+--会员基本信息  13798959749   13828783672
+select * from t_mbr_register r where r.login_name='13611840226' for update;--18323185303   18576773226--lcy  1-1CR4-224    22861608
+select * from t_mbr m where m.mbr_id='33369085' for update;--Active  660014823681
+select * from t_mbr m where m.person_id='14164736';   -- 1-1CR9-370   1-1CR4-224
+select * from t_mbr m where m.crm_cust_id='1-1L6-4079';
+select * from t_mbr m where m.mbr_cd='MGO02000056518694';
+select * from t_mbr_person p where p.person_id='5297900';
+select * from t_mbr_register r where r.mbr_id='14164736';
+select * from t_mbr_mbrship m where m.mbr_id in('22861608');
+select * from t_mbr_mbrship m where m.old_mbrship_cd='660009404286' or m.mbrship_cd='660015270027';--15258798
+select * from t_mbr_mbrship_category c where c.mbrship_category_id='5010027';
 select * from t_mbr_person p where p.mobile_no='18576773226' for update;
-select count(1) from t_mbr m where m.attribute=1 and m.stus='Active' and m.crm_cust_id is null--82359
-select * from user_tables t where t.table_name like '%CONVERT%'
+select count(1) from t_mbr m where m.attribute=1 and m.stus='Active' and m.crm_cust_id is null;--82359
+select * from user_tables t where t.table_name like '%CONVERT%';
 select * from t_mbr_point_auth for update
 select * from t_mbr_pointwallet_log l order by l.adjust_time desc;
 select stus from t_mbr_mbrship m group by m.stus;
 select m.stus from t_mbr m group by m.stus;
 
+select * from T_MBR_PUBLICMBRSHIP;
+
+select alias_no from t_mbr_alias_card c group by c.alias_no having count(1)>1;
+select * from t_mbr_alias_card c where c.alias_no='110000025769452';
+
+
 --万里通绑定用户查询
-select * from T_MBR_POINT_CONVERT_BIND;
+select * from t_mbr_point_auth a where a.authorize_id='MGO02000056518694'
+select * from T_MBR_POINT_CONVERT c where c.mbr_id='4917187';
 select * from T_MBR_POINT_CONVERT c where c.cellularqueryrequertid is  not null;
-select BIND_ID, LOYALTY_ACC_NO, BIND_ACC_NO, COMP_CODE, BIND_DATE, BIND_USERNAME, IS_LOCKED, MBR_ID, MBR_CD from T_MBR_POINT_CONVERT_BIND where 1=1 AND BIND_USERNAME = 'CLAIRE1009'
+select BIND_ID, LOYALTY_ACC_NO, BIND_ACC_NO, COMP_CODE, BIND_DATE, BIND_USERNAME, IS_LOCKED, MBR_ID, MBR_CD from T_MBR_POINT_CONVERT_BIND where 1=1 AND BIND_USERNAME = 'CLAIRE1009';
+
+--积分钱包(换出)
+select * from T_MBR_POINTWALLET_LOG;
+--根据订单编号查询积分钱包明细
+select l.mbr_id "会员编号",l.order_code "订单编号",l.point_type "积分类型",
+l.point_value "交易积分数",l.trans_type "交易类型",
+l.trans_status "交易状态(1成功,0失败)",l.trans_no "交易流水"
+ from T_MBR_POINTWALLET_LOG l where l.order_code in(
+       '2016051901',
+'201605190101',
+'201605190102',
+'2016051902',
+'2016052502',
+'201605250201',
+'2016052600000011'
+);
+
+
+select * from t_mbr m where m.mbr_id in ('41106487','42596352');
+select * from t_mbr_register r where r.mbr_id='42596352';
+
+
+--积分换入
+select * from T_MBR_POINT_CONVERT c;
 
 --当前序列值
 select last_number from user_sequences where sequence_name='SEQ_MBR_POINT';
@@ -26,7 +60,7 @@ select last_number from user_sequences where sequence_name='SEQ_MBR_POINT';
 select * from t_mbr_email_validate v where mbr_id='18576773226'  order by v.create_time desc for update;
 
 ---积分
-select * from t_mbr_point_account a where a.mbr_id='59108443';
+select * from t_mbr_point_account a where a.mbr_id='35224301';
 select * from t_mbr_mbrship m where m.mbr_id='42187364';
 
 
@@ -67,7 +101,7 @@ select * from t_mbr_alias_card c where c.mbrship_category_cd='9105000005';
 select * from t_mbr_mbrship m where m.mbrship_cd='881800050852'
 
 ---标准卡号
-select * from t_mbr_mbrship m where m.mbrship_cd='660009399993' or m.old_mbrship_cd='111060005345'
+select * from t_mbr_mbrship m where m.mbrship_cd='660013013978' or m.old_mbrship_cd='111060005345'
 
 --插入register表新手机号码登录方式
 insert into t_mbr_register values(SEQ_MBR_RGST.NEXTVAL,/*填入mbrid*/,'',/*填入新手机号*/,/*填入与其他登录方式相同的密码*/,1,'M','','','',syadate,'',sysdate,'',1);
@@ -101,22 +135,46 @@ t_mbr m,t_mbr_passenger p,t_mbr_passenger_certificate c
 where 
 m.mbr_id=p.mbr_id 
 and p.pass_id=c.pass_id 
-and m.mbr_id='857642' /*order by p.chi_name,c.cer_type*/;
+and m.mbr_id='4082445' order by p.create_time desc;
 
+select * from t_mbr_passenger p where p.mbr_id='4082445' and p.status='VALID' and p.chi_name='段建斌' order by p.create_time desc;
+
+
+select * from t_mbr_point_transaction t where t.acct_id='31565543';
 
 ----查询积分信息
-select * from t_mbr_register r where r.login_name='13554774675';
+select * from t_mbr_register r where r.login_name='18502796466';
+
+select * from t_mbr m where m.mbr_id='38754057';
 --查询积分账户
-select * from t_mbr_point_account a where a.mbr_id='59108443';
+select * from t_mbr_point_account a where a.mbr_id='38754057' and a.point_account_id='31565543';
+
+update t_mbr_point_account a set a.point_total=300000  where a.mbr_id='38754057' and a.point_account_id='31565543';
+
+insert into t_mbr_point_balance (POINT_BALANCE_ID, ACCT_ID, MBR_ID, POINT_BALANCE, EXPIRYDATE, 
+STUS, CREATE_MONTH, CREATE_TIM, CREATE_BY, UPDATE_TIM, UPDATE_BY)
+values (SEQ_MBR_POINT.NEXTVAL, 31565543, 38754057, 300000.00, to_date('31-05-2018', 'dd-mm-yyyy'), 'A',
+ null, sysdate, 'MEMBER-API', sysdate, 'MEMBER-API');
 
 select * from t_mbr m ,t_mbr_point_account a where m.mbr_id=a.mbr_id and m.attribute=1 and a.point_total>5000000;
 select * from t_mbr_point_account a where a.point_total>5000000;
+select * from t_mbr_point_balance b where b.acct_id='31565543';
+
 --查询余额信息
 select sum(tb.point_balance) as "积分余额"
 from t_mbr_point_balance tb
-where tb.acct_id = '20634848'
+where tb.acct_id = '30711290'
 and tb.expirydate >= trunc(sysdate) - 1 
 and tb.stus = 'A';
+
+
+select *
+from t_mbr_point_balance tb
+where tb.acct_id = '31565543'
+and tb.expirydate >= trunc(sysdate) - 1 
+and tb.stus = 'A';
+
+
 
 select *
 from t_mbr_point_balance tb
@@ -124,22 +182,6 @@ where tb.acct_id = '20634848'
 --该账户的所有积分明细
 select * from t_mbr_point_transaction t where t.acct_id='26905885';
 --根据订单号查询积分明细
-select * from t_mbr_point_
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -167,7 +209,7 @@ t_mbr_point_transaction t,t_mbr_point_account a,t_mbr m
 where 
 m.mbr_id=a.mbr_id 
 and a.point_account_id=t.acct_id 
-and m.mbr_id='59108443';
+and m.mbr_id='38754057';
 
 select * from t_mbr_point_transaction t where t.acct_id='26809252';
 --查询该笔订单的积分明细
@@ -226,7 +268,7 @@ select * from t_mbr_register r where r.mbr_id='30659'
 select * from t_mbr_point_transaction t where t.point_transaction_id='107958'
 select * from t_mbr_point_adjustment a where a.point_adjustment_id='0000107958';
 select * from t_mbr_point_account a where a.POINT_ACCOUNT_ID='20231047'
-select * from t_mbr m where m.mbr_id='1623908'
+select * from t_mbr m where m.mbr_id='1623908';
 
 
 select * from t_mbr_pointcard c where c.pointcardid in(0000107950,107951,107952,107953,107954,107955，107956,0000107957　,0000107958　);
@@ -250,4 +292,94 @@ select * from ulm.customer c where c.csn=42622775;
 select * from t_mbr_mbrship_category c where c.category_name like '%公共%'
 
 select * from t_mbr_mbrship m where m.mbrship_category_id='9900578';
-select * from t_mbr_mbrship_category m where 
+select * from t_mbr_mbrship_category m where ;
+
+
+select * from user_tables u where u.table_name like '%SMS%';
+
+select * from T_MBR_SMS_COUNTER t where t.mobile='42596352' order by t.create_time desc for update;
+
+
+
+
+---mg后台权限配置
+select * from t_mbr_user u order by u.create_tim asc;
+select * from t_mbr_user_module;
+select * from s_mbr_module m  where m.module_name in('会员管理','会籍管理','积分调整');
+
+--查询所有大类别
+select * from s_mbr_module m where m.parent_id=1;
+
+select *
+  from s_mbr_module m
+ where m.parent_id in
+       (select m.module_id
+          from s_mbr_module m
+         where m.module_name in ('会员管理', '会籍管理', '积分调整'))
+union
+select *
+  from s_mbr_module m
+ where m.module_name in ('会员管理', '会籍管理', '积分调整');
+
+select u.user_id,
+       u.login_name,
+       u.department,
+       u.create_tim,
+       u.create_by,
+       um.module_cd,
+       um.module_name,
+       m.module_id,
+       m.parent_id,
+       m.module_name,
+       m.module_desc,
+       m.action_url,
+       m.sort,
+       m.module_level
+  from t_mbr_user u, t_mbr_user_module um, s_mbr_module m
+ where u.user_id = um.user_id
+   and um.module_id = m.module_id
+   and u.login_name = 'root';
+
+
+
+---代金券
+select * from user_tables t where t.table_name like '%VCH%';
+select * from VCH_VOUCHER v where v.defid='8751' order by v.createtime desc;
+select * from VCH_VOUCHER_ORDER;
+select * from VCH_VOUCHER_RESUME;
+select * from VCH_VOUCHER_RULE r where r.defid='8751';
+select * from vch_definition d where d.vouchername like '%30元万里通2016年营销活动代金券%';--代金券的详细信息
+
+--新建一个代金券活动  一个活动可以对应多种不同类型的代金券
+--查询出当前正在进行的所有代金券活动信息
+select * from vch_promotion p where sysdate<p.enddate order by p.createtime desc;
+
+--针对某个代金券活动设定代金券信息(代金券定义)
+--查询正在进行的代金券活动下所有对应的代金券信息
+select p.id,p.promotionname,p.createtime,p.enddate,d.id "defid",
+d.vouchername,d.amount,d.createtime,d.issuedcount "已发行量"
+from vch_promotion p join vch_definition d 
+on p.id=d.promotionid 
+and sysdate<p.enddate 
+and p.deleted='N' 
+and d.deleted='N' 
+order by p.createtime desc;
+
+select * from vch_definition d where d.id='8588';
+
+--查询指定代金券定义下的所有代金券信息
+select * from VCH_VOUCHER v where v.defid='8749';    --- 660010804450
+select * from VCH_VOUCHER v where v.membercd='660010804450';
+select * from VCH_VOUCHER v where v.id='32657624';
+
+update VCH_VOUCHER v set v.status=0 where v.id='32657624';
+
+
+--代金券可以设置规则(代金券定义和规则是一对一的关系)
+select * from VCH_VOUCHER_RULE;
+
+--
+select * from vch_rule_valid_period;
+
+--查看所有代金券操作日志
+select * from vch_voucher_log;
