@@ -1,0 +1,1 @@
+update t_mbr_alias_card c set c.mbrship_cd='0002633815',c.mbrship_category_cd='0000000099' where c.alias_card_id='8413107';
