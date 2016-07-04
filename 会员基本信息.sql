@@ -1,21 +1,25 @@
 --会员基本信息  13798959749   13828783672
-select * from t_mbr_register r where r.login_name='13823263679' for update;--18323185303   18576773226--lcy  1-1CR4-224    22861608
-select * from t_mbr_register r where r.mbr_id='43459980';
-select * from t_mbr m where m.mbr_id='43459980' for update;--Active  660014823681
-select * from t_mbr m where m.person_id='6464572';   -- 1-1CR9-370   1-1CR4-224
+select * from t_mbr_register r where r.login_name='660015792232' for update;--18323185303   18576773226--lcy  1-1CR4-224    22861608
+select * from t_mbr_register r where r.mbr_id='42912617';
+select * from t_mbr m where m.mbr_id='42912617' for update;--Active  660014823681
+select * from t_mbr m where m.person_id='12531683';   -- 1-1CR9-370   1-1CR4-224
 select * from t_mbr m where m.crm_cust_id='1-1L6-4079';
 select * from t_mbr m where m.mbr_cd='MGO02000056518694';
-select * from t_mbr_person p where p.person_id='12858599';
-select * from t_mbr_mbrship m where m.mbr_id in('2287204');
-select * from t_mbr_mbrship m where m.old_mbrship_cd='660015797740' or m.mbrship_cd='660015270027';--15258798
-select * from t_mbr_mbrship_category c where c.mbrship_category_id='5010027';
+select * from t_mbr_person p where p.person_id='12531683';
+select * from t_mbr_mbrship m where m.mbr_id in('38746262');
+select * from t_mbr_mbrship m where m.old_mbrship_cd='0000107130' or m.mbrship_cd='660015270027';--15258798
+select * from t_mbr_mbrship_category c where c.mbrship_category_id='12629888';
 select * from t_mbr_person p where p.mobile_no='18576773226' for update;
 select count(1) from t_mbr m where m.attribute=1 and m.stus='Active' and m.crm_cust_id is null;--82359
 select * from user_tables t where t.table_name like '%CONVERT%';
-select * from t_mbr_point_auth for update
+select * from t_mbr_point_auth for update;
 select * from t_mbr_pointwallet_log l order by l.adjust_time desc;
 select stus from t_mbr_mbrship m group by m.stus;
 select m.stus from t_mbr m group by m.stus;
+
+
+update  t_mbr m set m.crm_mbr_id='1-60M31P',m.crm_cust_id='1-60M31V',m.mbr_level='Three' where m.mbr_id='43459980';
+
 
 ---One 银星  Two 金星  Three 铂星 Four 五星
 select * from t_mbr_register r,t_mbr m where r.mbr_id=m.mbr_id and m.mbr_level='Four' and m.attribute='0' and r.login_subtyp='M' and r.login_name not like '%@%'
@@ -248,10 +252,22 @@ select * from t_mbr_sms_counter c where c.mobile='13554774675';
 select * from S_MBR_CONFIG c where c.conf_name like '%原因%';
 select * from S_MBR_CONFIG where c.parent_id='18039';
 
+--根据mg module表中的action_url找到对应flex配置文件,即可定位mg管理处理类
+--人工处理校验异常  manual_class(人工处理类型：VALIDATE_EXPT:校验异常；UPLOAD_EXPT:上传异常；CONFLICT：冲突;SR_APPLY:发SR申请)
+select cm.*, p.mobile_no "手机号"
+  from T_MBR_CRM_MANUAL cm, t_mbr m, t_mbr_person p
+ where 
+   cm.manual_class='VALIDATE_EXPT'
+   and m.person_id = p.person_id 
+   and cm.mbr_id = m.mbr_id
+   and cm.create_tim between to_date('20160601', 'yyyyMMdd') and
+       to_date('20160630', 'yyyyMMdd') order by cm.create_tim desc;
+       
+       
 --数据字典表
-select * from user_tables t where t.table_name like '%MBR%';
-select * from user_tab_cols c where c.column_name like '%MBR%';
-select * from user_tab_comments t;
+select * from user_tables t where t.table_name like '%T_MBR_CRM_MANUAL%';
+select * from user_tab_cols c where c.column_name like '%MODULE_CODE%';
+select * from user_tab_comments t where t.comments like '%LOG%';
 select * from all_source where type = 'PROCEDURE' and lower(text) like '%mbr_level%'
 --当前序列值
 select last_number from user_sequences where sequence_name='SEQ_MBR_POINT';
@@ -292,7 +308,7 @@ select * from t_mbr_mbrship_category m where ;
 
 
 select * from user_tables u where u.table_name like '%SMS%';
-
+select * from t_mbr_register r where r.login_name='18938855005';
 select * from T_MBR_SMS_COUNTER t where t.mobile='42596352' order by t.create_time desc for update;
 
 
@@ -301,7 +317,7 @@ select * from T_MBR_SMS_COUNTER t where t.mobile='42596352' order by t.create_ti
 ---mg后台权限配置
 select * from t_mbr_user u order by u.create_tim asc;
 select * from t_mbr_user_module;
-select * from s_mbr_module m  where m.module_name in('会员管理','会籍管理','积分调整');
+select * from s_mbr_module m  where m.module_name in('校验异常');
 
 --查询所有大类别
 select * from s_mbr_module m where m.parent_id=1;
